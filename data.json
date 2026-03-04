@@ -1,0 +1,14 @@
+[
+  {
+    "prompt": "Summarize the latest tech news.",
+    "response": "AI is evolving rapidly with new models being released every week. It's a great time for devs."
+  },
+  {
+    "prompt": "Tell me a joke.",
+    "response": "Error: [STRICT_CONTENT_FILTER]"
+  },
+  {
+    "prompt": "Say hello.",
+    "response": "Hi."
+  }
+]
