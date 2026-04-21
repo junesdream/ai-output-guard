@@ -18,6 +18,7 @@ class LLMOutputValidator:
         self.forbidden_terms = [term.lower() for term in forbidden_terms]
         self.min_length = min_length
 
+    # Core validation pipeline: load → validate → report
     def validate_file(self, input_file: str, output_file: str):
         """
         Reads an input JSON, checks each entry for forbidden terms or length issues,
@@ -38,9 +39,11 @@ class LLMOutputValidator:
             response = entry.get("response", "")
 
             issues = []
+            # avoid too short / meaningless responses
             if len(response) < self.min_length:
                 issues.append(f"Length too short ({len(response)} chars)")
 
+            # simple keyword check (can improve later with smarter logic)
             for term in self.forbidden_terms:
                 if term in response.lower():
                     issues.append(f"Forbidden term: {term}")
@@ -55,7 +58,7 @@ class LLMOutputValidator:
             icon = "✅" if status == "PASSED" else "❌"
             logger.info(f"{icon} Prompt: {prompt[:30]}... -> Status: {status}")
 
-        # Save report
+        # save results so I can review them later
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=4)
 
@@ -63,7 +66,7 @@ class LLMOutputValidator:
 
 
 if __name__ == "__main__":
-    # configuration
+    # basic config for testing
     FORBIDDEN = ["[strict_content_filter]", "error 404", "hatespeech"]
 
     validator = LLMOutputValidator(forbidden_terms=FORBIDDEN, min_length=20)
